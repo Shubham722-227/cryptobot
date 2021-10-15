@@ -5,7 +5,7 @@ import json
 class CryptoBot:
     def __init__(self, pair):
         self.pair = pair
-        self.coin = 90
+        self.coin = 0
 
     def save_crypto_data(self, data):
         with open('data.json', 'w') as f:
@@ -13,13 +13,14 @@ class CryptoBot:
 
     def load_crypto_data_from_file(self):
         data = {}
-        with open('data.json', 'w') as f:
-            try:
+        try:
+            with open('data.json', 'r') as f:
                 data = json.load(f)
-                self.coin = int(data[self.pair]['coins'])
-            except:
+        except:
+            with open('data.json', 'w') as f:
                 data = self.make_crypto_data(data)
                 self.save_crypto_data(data)
+        self.coin = data[self.pair]['coins']
         return data
 
     def make_crypto_data(self, data):

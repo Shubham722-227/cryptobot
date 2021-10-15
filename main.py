@@ -11,7 +11,7 @@ class CryptoBot:
         with open('data.json', 'w') as f:
             json.dump(data, f, indent=4)
 
-    def load_crypto_data_from_file(self):
+    def load_crypto_data(self):
         data = {}
         try:
             with open('data.json', 'r') as f:
@@ -37,6 +37,10 @@ class CryptoBot:
 
 
 if __name__ == "__main__":
-    btc = CryptoBot("I-BTC_INR ")
-    btc_data = btc.load_crypto_data_from_file()
+    btc = CryptoBot("I-BTC_INR")
+    btc_data = btc.load_crypto_data()
     print(btc_data)
+
+    zil = CryptoBot("zil")
+    zil_data = zil.load_crypto_data()
+    print(zil_data)

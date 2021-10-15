@@ -16,11 +16,13 @@ class CryptoBot:
         try:
             with open('data.json', 'r') as f:
                 data = json.load(f)
+            data = data[self.pair]
         except:
-            with open('data.json', 'w') as f:
+            with open('data.json', 'a') as f:
                 data = self.make_crypto_data(data)
                 self.save_crypto_data(data)
-        self.coin = data[self.pair]['coins']
+            data = data[self.pair]
+        self.coin = data.get("coins")
         return data
 
     def make_crypto_data(self, data):
@@ -35,7 +37,6 @@ class CryptoBot:
 
 
 if __name__ == "__main__":
-    btc = CryptoBot("I-BTC_INR")
-    print(btc.coin)
-    btc.load_crypto_data_from_file()
-    print(btc.coin)
+    btc = CryptoBot("I-BTC_INR ")
+    btc_data = btc.load_crypto_data_from_file()
+    print(btc_data)

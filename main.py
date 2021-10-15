@@ -6,6 +6,8 @@ class CryptoBot:
     def __init__(self, pair):
         self.pair = pair
         self.coin = 0
+        self.crypto_data = self.load_crypto_data()
+        self.trades = self.load_trades()
 
     def save_crypto_data(self, data):
         with open('data.json', 'w') as f:
@@ -31,16 +33,30 @@ class CryptoBot:
             'low': [],
             'close': [],
             'prices': [],
-            'coins': 0
+            'coins': 0.0
         }
         return data
+
+    def load_trades(self):
+        trades = {}
+        try:
+            with open('trades.json', 'r') as f:
+                trades = json.load(f)
+                trades = trades[self.pair]
+        except:
+            with open('trades.json', 'a') as f:
+                trades[self.pair] = []
+                self.save_trade_data(trades)
+        return trades
+
+    def save_trade_data(self, data):
+        with open('trades.json', 'w') as f:
+            json.dump(data, f, indent=4)
 
 
 if __name__ == "__main__":
     btc = CryptoBot("I-BTC_INR")
-    btc_data = btc.load_crypto_data()
-    print(btc_data)
+    print(btc.crypto_data, btc.trades)
 
     zil = CryptoBot("zil")
-    zil_data = zil.load_crypto_data()
-    print(zil_data)
+    print(zil.crypto_data, zil.trades)

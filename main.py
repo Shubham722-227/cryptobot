@@ -18,11 +18,10 @@ class CryptoBot:
         try:
             with open('data.json', 'r') as f:
                 data = json.load(f)
-            data = data[self.pair]
+                data = data[self.pair]
         except:
-            with open('data.json', 'a') as f:
-                data = self.make_crypto_data(data)
-                self.save_crypto_data(data)
+            data = self.make_crypto_data(data)
+            self.save_crypto_data(data)
             data = data[self.pair]
         self.coin = data.get("coins")
         return data
@@ -44,9 +43,9 @@ class CryptoBot:
                 trades = json.load(f)
                 trades = trades[self.pair]
         except:
-            with open('trades.json', 'a') as f:
-                trades[self.pair] = []
-                self.save_trade_data(trades)
+            trades[self.pair] = []
+            self.save_trade_data(trades)
+            trades = trades[self.pair]
         return trades
 
     def save_trade_data(self, data):

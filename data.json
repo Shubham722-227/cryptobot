@@ -1,0 +1,16 @@
+{
+    "I-BTC_INR": {
+        "high": [],
+        "low": [],
+        "close": [],
+        "prices": [],
+        "coins": 1
+    },
+    "zil": {
+        "high": [],
+        "low": [],
+        "close": [],
+        "prices": [],
+        "coins": 2
+    }
+}

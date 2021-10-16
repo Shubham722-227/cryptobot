@@ -10,79 +10,66 @@ class CryptoBot:
         self.pair = pair
         self.coin = 0
         self.crypto_data = self.load_crypto_data()
-        self.trades = self.load_trades()
+        self.trades = []
         self.last_trade = None
+        self.balance = 0
 
     def save_crypto_data(self, data):
-        all_data = {}
-        with open('data.json', 'w+') as f:
-            try:
+        '''
+        Saves the data in respective coin. 
+        If the file doesn't exist, it creates and fills with default data.
+        Updates new data of coin
+        '''
+
+        # If file not found, creates file and enters default value
+        try:
+            with open('data.json', 'r') as f:
                 all_data = json.load(f)
-            except:
-                pass
-            all_data[self.pair] = data
+        except:
+            with open('data.json', 'w') as f:
+                all_data = {"balance": 0, "crypto": {}}
+                json.dump(all_data, f, indent=4)
+
+        # Enters data to specific coin
+        all_data = {}
+        with open('data.json', 'r') as f:
+            all_data = json.load(f)
+
+        with open('data.json', 'w') as f:
+            all_data["crypto"][self.pair] = data
             json.dump(all_data, f, indent=4)
 
     def load_crypto_data(self):
+        '''
+        Loads the data for a coin. 
+        If not found, it generates a new one for it. 
+        '''
         data = {}
         try:
             with open('data.json', 'r') as f:
                 data = json.load(f)
-                data = data[self.pair]
+                self.balance = data.get("balance")
+                data = self.crypto_data = data["crypto"][self.pair]
+                self.coin = data.get("coins")
+                self.trades = data.get("trades")
+                self.last_trade = data.get("last_trade")
+
         except:
-            with open('data.json', 'w+') as f:
-                try:
-                    all_data = json.load(f)
-                except:
-                    pass
-                data = self.make_crypto_data()
-                self.save_crypto_data(data)
-        self.coin = data.get("coins")
-        self.last_trade = data.get("last_trade")
+            data = self.make_crypto_data()
+            self.save_crypto_data(data)
         return data
 
     def make_crypto_data(self):
+        '''
+        Generates new data for new crypto coin
+        '''
         data = {
-            'high': [],
-            'low': [],
-            'close': [],
-            'prices': [],
+            'trades': [],
             'coins': 0.0,
+            "worth": 0.0,
             'last_trade': None
         }
         return data
-
-    def load_trades(self):
-        trades = {}
-        try:
-            with open('trades.json', 'r') as f:
-                trades = json.load(f)
-                crypto_trades = trades[self.pair]
-        except:
-            with open('trades.json', 'a+') as f:
-                try:
-                    trades = json.load(f)
-                    f.seek(0)
-                except:
-                    pass
-                trades[self.pair] = []
-                json.dump(trades, f, indent=4)
-            crypto_trades = trades[self.pair]
-        return crypto_trades
-
-    def save_trade_data(self, data):
-        trades = {}
-        with open('trades.json', 'w+') as f:
-            try:
-                trades = json.load(f)
-                # f.seek(0)
-            except:
-                pass
-            try:
-                trades[self.pair].append(data)
-            except:
-                trades[self.pair] = data
-            json.dump(trades, f, indent=4)
 
     def get_coin_data(self):
         try:
@@ -95,7 +82,7 @@ class CryptoBot:
         except:
             return np.array([])
 
-    def get_call(self):
+    def get_trend(self):
         coin_data = self.get_coin_data()
         high_max = (np.max(coin_data, axis=0))[1]
         low_min = (np.min(coin_data, axis=0))[2]
@@ -109,10 +96,16 @@ class CryptoBot:
 
     def driver(self):
         while True:
-            self.trades = self.load_trades()
-
-            call = self.get_call()
-            print(call)
+            crypto_data = self.load_crypto_data()
+            print(self.balance)
+            trend = self.get_trend()
+            print(trend)
+            if trend == "UPTREND":
+                # Buy
+                pass
+            elif trend == "DOWNTREND":
+                # Sell
+                pass
             time.sleep(20)
 
 

@@ -48,12 +48,10 @@ class CryptoBot:
         try:
             with open('data.json', 'r') as f:
                 data = json.load(f)
-                self.balance = data.get("balance")
+                self.balance = data.get("balance")/len(data.get("crypto"))
                 data = self.crypto_data = data["crypto"][self.pair]
                 self.coin = data.get("coins")
                 self.trades = data.get("trades")
-                self.last_trade = data.get("last_trade")
-
         except:
             data = self.make_crypto_data()
             self.save_crypto_data(data)
@@ -75,7 +73,8 @@ class CryptoBot:
         try:
             data = requests.get(
                 f"https://public.coindcx.com/market_data/candles?pair={self.pair}&interval=1m").json()
-            data = data[:20]
+            self.last_trade = data[0]
+            data = data[1:21]
             data = pd.DataFrame(data)
             data = np.array(data)
             return data
@@ -84,28 +83,34 @@ class CryptoBot:
 
     def get_trend(self):
         coin_data = self.get_coin_data()
-        high_max = (np.max(coin_data, axis=0))[1]
-        low_min = (np.min(coin_data, axis=0))[2]
-        print(high_max, low_min, coin_data[0][4])
-        if coin_data[0][4] > high_max:
-            return "UPTREND"
-        elif coin_data[0][4] < low_min:
-            return "DOWNTREND"
-        else:
-            return "NOTREND"
+        if len(coin_data):
+            high_max = (np.max(coin_data, axis=0))[1]
+            low_min = (np.min(coin_data, axis=0))[2]
+            print(high_max, low_min, self.last_trade.get("close"))
+            if self.last_trade.get("high") > high_max:
+                return "UPTREND"
+            elif self.last_trade.get("low") < low_min:
+                return "DOWNTREND"
+            else:
+                return "NOTREND"
+
+    def buy_crypto(self):
+        pass
+
+    def sell_crypto(self):
+        pass
 
     def driver(self):
         while True:
             crypto_data = self.load_crypto_data()
-            print(self.balance)
             trend = self.get_trend()
             print(trend)
             if trend == "UPTREND":
                 # Buy
-                pass
+                self.buy_crypto()
             elif trend == "DOWNTREND":
                 # Sell
-                pass
+                self.sell_crypto()
             time.sleep(20)
 
 

@@ -1,10 +1,11 @@
 {
-    "I-BTC_INR": {
-        "high": [],
-        "low": [],
-        "close": [],
-        "prices": [],
-        "coins": 0.0,
-        "last_trade": null
+    "balance": 1000.0,
+    "crypto": {
+        "I-BTC_INR": {
+            "trades": [],
+            "coins": 0.0,
+            "worth": 0.0,
+            "last_trade": null
+        }
     }
 }

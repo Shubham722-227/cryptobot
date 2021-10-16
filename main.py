@@ -99,6 +99,7 @@ class CryptoBot:
         coin_data = self.get_coin_data()
         high_max = (np.max(coin_data, axis=0))[1]
         low_min = (np.min(coin_data, axis=0))[2]
+        print(high_max, low_min, coin_data[0][4])
         if coin_data[0][4] > high_max:
             return "UPTREND"
         elif coin_data[0][4] < low_min:

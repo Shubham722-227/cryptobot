@@ -4,13 +4,7 @@
         "low": [],
         "close": [],
         "prices": [],
-        "coins": 0.0
-    },
-    "zil": {
-        "high": [],
-        "low": [],
-        "close": [],
-        "prices": [],
-        "coins": 0.0
+        "coins": 0.0,
+        "last_trade": null
     }
 }

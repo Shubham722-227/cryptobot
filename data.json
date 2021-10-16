@@ -1,7 +1,13 @@
 {
-    "balance": 1000.0,
+    "balance": 19990,
     "crypto": {
         "I-BTC_INR": {
+            "trades": [],
+            "coins": 0.0,
+            "worth": 0.0,
+            "last_trade": null
+        },
+        "I-ETH_INR": {
             "trades": [],
             "coins": 0.0,
             "worth": 0.0,

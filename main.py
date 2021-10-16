@@ -1,9 +1,10 @@
+from numpy.core.records import array
 import requests
 import json
 import time
 import numpy as np
 import pandas as pd
-
+import matplotlib.pyplot as plt
 
 class CryptoBot:
     def __init__(self, pair):
@@ -13,6 +14,7 @@ class CryptoBot:
         self.trades = []
         self.last_trade = None
         self.balance = 0
+        self.closing_pric = []
 
     def save_crypto_data(self, data):
         '''
@@ -75,7 +77,7 @@ class CryptoBot:
         try:
             data = requests.get(
                 f"https://public.coindcx.com/market_data/candles?pair={self.pair}&interval=1m").json()
-            data = data[:20]
+            data = data[:2]
             data = pd.DataFrame(data)
             data = np.array(data)
             return data
@@ -87,6 +89,8 @@ class CryptoBot:
         high_max = (np.max(coin_data, axis=0))[1]
         low_min = (np.min(coin_data, axis=0))[2]
         print(high_max, low_min, coin_data[0][4])
+        self.closing_pric.append(coin_data[0][4])
+        # print(self.closing_pric)
         if coin_data[0][4] > high_max:
             return "UPTREND"
         elif coin_data[0][4] < low_min:
@@ -95,9 +99,9 @@ class CryptoBot:
             return "NOTREND"
 
     def driver(self):
-        while True:
+        for _ in range(20):
             crypto_data = self.load_crypto_data()
-            print(self.balance)
+            # print(self.balance)
             trend = self.get_trend()
             print(trend)
             if trend == "UPTREND":
@@ -106,10 +110,23 @@ class CryptoBot:
             elif trend == "DOWNTREND":
                 # Sell
                 pass
-            time.sleep(20)
+            time.sleep(10)
+
+    def plot_graph(self):
+        x = np.arange(start = 1, stop = 21, step = 1) 
+        y = self.closing_pric
+
+        plt.plot(x,y)
+        plt.savefig("plot.png")
+        # plt.gcf().autofmt_xdate()
+        plt.show()
+
 
 
 if __name__ == "__main__":
     btc = CryptoBot("I-BTC_INR")
+    eth = CryptoBot("I-ETH_INR")
     # print(btc.crypto_data)
     btc.driver()
+    btc.plot_graph()
+

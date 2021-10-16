@@ -99,7 +99,9 @@ class CryptoBot:
             return "NOTREND"
 
     def driver(self):
-        for _ in range(20):
+        x = []
+        i=1
+        while True:
             crypto_data = self.load_crypto_data()
             # print(self.balance)
             trend = self.get_trend()
@@ -110,16 +112,26 @@ class CryptoBot:
             elif trend == "DOWNTREND":
                 # Sell
                 pass
-            time.sleep(10)
+            # x = np.arange(start = 1, stop = i, step = 1) 
+            x.append(i)
+            y = self.closing_pric
 
-    def plot_graph(self):
-        x = np.arange(start = 1, stop = 21, step = 1) 
-        y = self.closing_pric
+            plt.clf()
+            plt.plot(x,y)
+            plt.savefig("plot.png")
+            # plt.show()
+            plt.pause(5)
+            i+= 1
 
-        plt.plot(x,y)
-        plt.savefig("plot.png")
-        # plt.gcf().autofmt_xdate()
-        plt.show()
+            # time.sleep(5)
+
+    # def plot_graph(self):
+    #     x = np.arange(start = 1, stop = 21, step = 1) 
+    #     y = self.closing_pric
+
+    #     plt.plot(x,y)
+    #     plt.savefig("plot.png")
+    #     plt.show()
 
 
 
@@ -128,5 +140,4 @@ if __name__ == "__main__":
     eth = CryptoBot("I-ETH_INR")
     # print(btc.crypto_data)
     btc.driver()
-    btc.plot_graph()
 

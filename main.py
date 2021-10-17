@@ -65,7 +65,6 @@ class CryptoBot:
             'trades': [],
             'coins': 0.0,
             "worth": 0.0,
-            'last_trade': None
         }
         return data
 
@@ -94,21 +93,54 @@ class CryptoBot:
             else:
                 return "NOTREND"
 
+    def get_trade_data(self, trade, amount):
+        '''
+        Generates and saves Trade data to JSON file. 
+        '''
+        transaction = {
+            "time-stamp": str(int(time.time())),
+            "price_inr": self.last_trade.get("close"),
+            "trade": trade,
+            "amount": amount
+        }
+        print('TRADE:')
+        print(json.dumps(transaction, indent=4))
+        self.crypto_data["trades"].append(transaction)
+        if trade == "BUY":
+            self.crypto_data["coins"] = self.coin + \
+                (amount/self.last_trade.get("close"))
+            self.crypto_data["worth"] = self.crypto_data.get("worth") + amount
+            self.balance = self.balance - amount
+        elif trade == "SELL":
+            self.crypto_data["coins"] = self.coin - \
+                (amount/self.last_trade.get("close"))
+            self.crypto_data["worth"] = self.crypto_data.get(
+                "worth") - (self.crypto_data["coins"]*self.last_trade.get("close"))
+            self.balance = self.balance + self.crypto_data["coins"] * \
+                self.last_trade.get("close")
+        self.save_crypto_data(self.crypto_data)
+
+        with open('data.json', 'r') as f:
+            all_data = json.load(f)
+
+        with open('data.json', 'w') as f:
+            all_data["balance"] = self.balance
+
     def buy_crypto(self):
-        pass
+        self.get_trade_data("BUY", self.balance)
 
     def sell_crypto(self):
-        pass
+        self.get_trade_data("SELL", 0.0)
 
     def driver(self):
         while True:
             crypto_data = self.load_crypto_data()
             trend = self.get_trend()
             print(trend)
-            if trend == "UPTREND":
+            if trend == "UPTREND" and self.coin == 0.0:
                 # Buy
                 self.buy_crypto()
-            elif trend == "DOWNTREND":
+            elif trend == "DOWNTREND" and self.coin > 0.0:
                 # Sell
                 self.sell_crypto()
             time.sleep(20)

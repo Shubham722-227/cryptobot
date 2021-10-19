@@ -73,7 +73,7 @@ class CryptoBot:
             data = requests.get(
                 f"https://public.coindcx.com/market_data/candles?pair={self.pair}&interval=1m").json()
             self.last_trade = data[0]
-            data = data[1:21]
+            data = data[1:101]
             data = pd.DataFrame(data)
             data = np.array(data)
             return data
@@ -105,29 +105,34 @@ class CryptoBot:
         }
         print('TRADE:')
         print(json.dumps(transaction, indent=4))
-        self.crypto_data["trades"].append(transaction)
-        if trade == "BUY":
-            self.crypto_data["coins"] = self.coin + \
-                (amount/self.last_trade.get("close"))
-            self.crypto_data["worth"] = self.crypto_data.get("worth") + amount
-            self.balance = self.balance - amount
-        elif trade == "SELL":
-            self.crypto_data["coins"] = self.coin - \
-                (amount/self.last_trade.get("close"))
-            self.crypto_data["worth"] = self.crypto_data.get(
-                "worth") - (self.crypto_data["coins"]*self.last_trade.get("close"))
-            self.balance = self.balance + self.crypto_data["coins"] * \
-                self.last_trade.get("close")
-        self.save_crypto_data(self.crypto_data)
+        return transaction
+        # self.crypto_data["trades"].append(transaction)
+        # if trade == "BUY":
+        #     self.crypto_data["coins"] = self.coin + \
+        #         (amount/self.last_trade.get("close"))
+        #     self.crypto_data["worth"] = self.crypto_data.get("worth") + amount
+        #     self.balance = self.balance - amount
+        # elif trade == "SELL":
+        #     self.crypto_data["coins"] = self.coin - \
+        #         (amount/self.last_trade.get("close"))
+        #     self.crypto_data["worth"] = self.crypto_data.get(
+        #         "worth") - (self.crypto_data["coins"]*self.last_trade.get("close"))
+        #     self.balance = self.balance + self.crypto_data["coins"] * \
+        #         self.last_trade.get("close")
+        # self.save_crypto_data(self.crypto_data)
 
-        with open('data.json', 'r') as f:
-            all_data = json.load(f)
+        # with open('data.json', 'r') as f:
+        #     all_data = json.load(f)
 
-        with open('data.json', 'w') as f:
-            all_data["balance"] = self.balance
+        # with open('data.json', 'w') as f:
+        #     all_data["balance"] = self.balance
+
+    def set_buy_data(self, tansaction):
+        pass
 
     def buy_crypto(self):
-        self.get_trade_data("BUY", self.balance)
+        transaction = self.get_trade_data("BUY", self.balance)
+        self.set_buy_data(transaction)
 
     def sell_crypto(self):
         self.get_trade_data("SELL", 0.0)

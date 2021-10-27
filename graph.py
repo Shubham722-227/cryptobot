@@ -26,7 +26,17 @@ def average(coin, avg, time):
 
     data = data[time-1:-1]
 
-    return avg, data
+    return data, avg
+
+
+def get_slope(data):
+    data = np.flipud(data)
+    slope = []
+    last = data[0]
+    for id in range(1, len(data), 10):
+        m = id/(last - data[id])
+        slope.append(m)
+    return np.flipud(np.array(slope))
 
 
 def graph(coin, time):
@@ -34,22 +44,33 @@ def graph(coin, time):
     avg = np.array([])
     while True:
         avg = np.array([])
-        avg, closing_data = average(coin, avg, time)
+        closing_data, avg = average(coin, avg, time)
         time_arr = np.arange(start=0, stop=len(closing_data), step=1)
 
-        i += 1
-        print(i)
+        slopes = get_slope(avg)
+        # plt.clf()
+        # plt.plot(np.arange(start=0, stop=len(slopes), step=1), slopes)
+        # plt.pause(5)
+        print(slopes, "\n")
+        # print(slopes[-3:])
+        check = 0
+        for id in range(3):
+            if slopes[len(slopes)-id - 1] > 0:
+                check += 1
+        if check == 3:
+            print("BUY\n")
+
         plt.clf()
         plt.plot(time_arr, closing_data)
         plt.plot(time_arr, avg, c="red", linestyle="--")
         plt.xlabel("Time")
         plt.ylabel("Closing Price")
         plt.title("Closing Price Data")
-        plt.pause(10)
+        plt.pause(5)
 
 
 if __name__ == "__main__":
-    time = 60
-    graph("I-BTC_INR", time)
-    # graph("B-XTZ_BTC", time)
+    time = 180
+    # graph("I-BTC_INR", time)
+    graph("I-MATIC_INR", time)
     # get_data("I-BTC_INR")

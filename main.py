@@ -14,6 +14,7 @@ class CryptoBot:
         self.balance = balance
         self.time = time_interval
         self.last_transaction = None
+        self.load_crypto_data()
 
     def save_crypto_data(self, data):
         '''
@@ -106,7 +107,7 @@ class CryptoBot:
         for id in range(3):
             if coin_mean_slope[len(coin_mean_slope)-id - 1] > 0:
                 check += 1
-        if check == 3:
+        if check == 3 and not self.last_transaction == "BUY":
             return "BUY"
         return "IDLE"
 
@@ -123,9 +124,11 @@ class CryptoBot:
 
     def make_buy(self, price):
         coin_data = self.load_crypto_data()
+        if not coin_data:
+            pass
 
-        self.balance = coin_data.get("balance")
-        amount = self.balance/price
+        self.last_transaction = "BUY"
+        amount = float(self.balance/price)
         trade = self.make_trade_data(price, "BUY", amount)
 
         prev_trades = coin_data.get("trades")
@@ -134,6 +137,7 @@ class CryptoBot:
         coin_data["coins"] = amount
         coin_data["balance"] = coin_data.get("balance") - self.balance
         print(coin_data)
+        self.save_crypto_data(coin_data)
 
     def driver(self):
         while True:
@@ -149,10 +153,10 @@ class CryptoBot:
 
 if __name__ == "__main__":
     print("Starting...\n")
-    time = 120
-    # coin = "I-BTC_INR"
+    time = 60
+    coin = "I-BTC_INR"
     # coin = "I-MATIC_INR"
-    coin = "I-MANA_INR"
+    # coin = "I-MANA_INR"
     balance = 1000.0
     bot = CryptoBot(coin, time, balance)
     # print(bot.load_crypto_data())

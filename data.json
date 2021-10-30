@@ -1,11 +1,6 @@
 {
     "I-BTC_INR": {
         "trades": [],
-        "balance": 0.0,
-        "coins": 0.0
-    },
-    "I-MANA_INR": {
-        "trades": [],
         "balance": 1000.0,
         "coins": 0.0
     }

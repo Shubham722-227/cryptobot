@@ -1,10 +1,12 @@
 {
-    "balance": 1000.0,
-    "crypto": {
-        "I-BTC_INR": {
-            "trades": [],
-            "coins": 1.0,
-            "worth": 0.0
-        }
+    "I-BTC_INR": {
+        "trades": [],
+        "balance": 0.0,
+        "coins": 0.0
+    },
+    "I-MANA_INR": {
+        "trades": [],
+        "balance": 1000.0,
+        "coins": 0.0
     }
 }

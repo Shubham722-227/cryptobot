@@ -137,22 +137,22 @@ class CryptoBot:
         plt.xlabel("Time")
         plt.ylabel("Closing Price")
         plt.title("Closing Price Data")
-        plt.pause(5)
+        plt.pause(10)
 
     def make_buy(self, price):
         coin_data = self.load_crypto_data()
         if not coin_data:
             return
-
+        balance = coin_data.get("balance")
         self.last_transaction = "BUY"
-        amount = float(self.balance/price)
+        amount = float(balance/price)
         trade = self.make_trade_data(price, "BUY", amount)
 
         prev_trades = coin_data.get("trades")
         prev_trades.append(trade)
         coin_data["trades"] = prev_trades
         coin_data["coins"] = amount
-        coin_data["balance"] = coin_data.get("balance") - self.balance
+        coin_data["balance"] = coin_data.get("balance") - balance
         print(coin_data)
         self.save_crypto_data(coin_data)
 
@@ -195,7 +195,8 @@ if __name__ == "__main__":
     # coin = "I-MATIC_INR"
     # coin = "I-MANA_INR"
     coin = "I-BAT_INR"
-    balance = 1000.0
+    # coin = "B-ZIL_BTC"
+    balance = 100000.0
     bot = CryptoBot(coin, time, balance)
     # print(bot.load_crypto_data())
     bot.driver()

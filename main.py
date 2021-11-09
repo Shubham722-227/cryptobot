@@ -1,21 +1,22 @@
-from numpy.testing._private.utils import assert_almost_equal
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from datetime import datetime as dt
-from pprint import pprint
+from time import sleep
 import requests
 import json
 import os
 
 
 class CryptoBot:
-    def __init__(self, coin, time_interval, balance):
+    def __init__(self, coin, time_interval, balance, loss_margin, profit_margin):
         self.coin = coin
         self.balance = balance
         self.time = time_interval
-        self.last_transaction = None
+        self.loss_margin = loss_margin
+        self.profit_margin = profit_margin
         self.load_crypto_data()
+        self.last_transaction = self.set_last_transaction()
 
     def save_crypto_data(self, data):
         '''
@@ -121,9 +122,10 @@ class CryptoBot:
         last_trade = coin_data.get("trades")[-1]
         last_price = last_trade.get("price_inr")
 
-        stop_loss = last_price - (0.01 * last_price)
-        profit_margin = last_price + (0.04 * last_price)
-        print(stop_loss, profit_margin, current_price)
+        stop_loss = last_price - ((self.loss_margin/100)* last_price)
+        profit_margin = last_price + ((self.profit_margin/100) * last_price)
+        print("\nCurrent Trade: \nStop Loss: ", stop_loss, "\nProfit Margin: ",
+              profit_margin)
         if current_price <= stop_loss or current_price >= profit_margin:
             return "SELL"
         return "IDLE"
@@ -138,6 +140,16 @@ class CryptoBot:
         plt.ylabel("Closing Price")
         plt.title("Closing Price Data")
         plt.pause(10)
+
+    def set_last_transaction(self):
+        coin_data = self.load_crypto_data()
+        if not coin_data:
+            return "SELL"
+        if not len(coin_data["trades"]) > 0:
+            return "SELL"
+
+        last_trade = coin_data.get("trades")[-1]
+        return last_trade.get("trade")
 
     def make_buy(self, price):
         coin_data = self.load_crypto_data()
@@ -178,14 +190,16 @@ class CryptoBot:
             coin_data = self.get_coin_data()
             coin_avg = self.get_coin_mean(coin_data)
             coin_avg_slope = self.get_mean_slope(coin_avg)
-            if not self.last_transaction == "BUY" and self.check_buy(coin_avg_slope) == "BUY":
+            if self.last_transaction == "SELL" and self.check_buy(coin_avg_slope) == "BUY":
                 self.make_buy(coin_data[-1])
 
-            if not self.last_transaction == "SELL" and self.check_sell(coin_data[-1]) == "SELL":
+            if self.last_transaction == "BUY" and self.check_sell(coin_data[-1]) == "SELL":
                 self.make_sell(coin_data[-1])
+
             else:
-                print("IDLE")
+                print("Idling at ", coin_data[-1])
             self.graph(coin_data, coin_avg)
+            # sleep(10)
 
 
 if __name__ == "__main__":
@@ -194,9 +208,10 @@ if __name__ == "__main__":
     # coin = "I-BTC_INR"
     # coin = "I-MATIC_INR"
     # coin = "I-MANA_INR"
+    # coin = "I-SC_INR"
     coin = "I-BAT_INR"
     # coin = "B-ZIL_BTC"
     balance = 100000.0
-    bot = CryptoBot(coin, time, balance)
+    bot = CryptoBot(coin, time, balance, 1, 4)
     # print(bot.load_crypto_data())
     bot.driver()

@@ -1,3 +1,7 @@
-import time
-seconds = time.time()
-print("Seconds since epoch =", seconds)
+from plyer import notification as pn
+
+pn.notify(
+    title="Hello",
+    message="Heiyaaaaaaaaa",
+    timeout=10
+)

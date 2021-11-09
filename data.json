@@ -1,22 +1,61 @@
 {
-    "I-MANA_INR": {
+    "I-BTC_INR": {
         "trades": [],
         "balance": 100000.0,
         "coins": 0.0
     },
     "I-MATIC_INR": {
-        "trades": [],
-        "balance": 100000.0,
-        "coins": 0.0
+        "trades": [
+            {
+                "time-stamp": "2021-11-04 02:10:19.777509",
+                "price_inr": 161.3,
+                "trade": "BUY",
+                "amount": 619.962802231866
+            }
+        ],
+        "balance": 0.0,
+        "coins": 619.962802231866
+    },
+    "I-SC_INR": {
+        "trades": [
+            {
+                "time-stamp": "2021-11-04 02:33:12.474810",
+                "price_inr": 1.65,
+                "trade": "BUY",
+                "amount": 60606.06060606061
+            }
+        ],
+        "balance": 0.0,
+        "coins": 60606.06060606061
     },
     "I-BAT_INR": {
-        "trades": [],
-        "balance": 100000.0,
-        "coins": 0.0
-    },
-    "I-BTC_INR": {
-        "trades": [],
-        "balance": 100000.0,
+        "trades": [
+            {
+                "time-stamp": "2021-11-04 02:55:25.856883",
+                "price_inr": 77.68,
+                "trade": "BUY",
+                "amount": 1287.3326467559216
+            },
+            {
+                "time-stamp": "2021-11-04 04:21:38.450964",
+                "price_inr": 76.61,
+                "trade": "SELL",
+                "amount": 1287.3326467559216
+            },
+            {
+                "time-stamp": "2021-11-04 04:21:48.755620",
+                "price_inr": 76.61,
+                "trade": "BUY",
+                "amount": 1287.3326467559216
+            },
+            {
+                "time-stamp": "2021-11-09 10:39:29.261013",
+                "price_inr": 101.6,
+                "trade": "SELL",
+                "amount": 1287.3326467559216
+            }
+        ],
+        "balance": 130792.99691040162,
         "coins": 0.0
     }
 }

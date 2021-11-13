@@ -204,15 +204,15 @@ class CryptoBot:
 
 if __name__ == "__main__":
     print("Starting...\n")
-    timeSpan = 120
-    # coin = "I-BTC_INR"
+    timeSpan = 30
+    coin = "I-BTC_INR"
     # coin = "I-MATIC_INR"
-    coin = "I-MANA_INR"
+    # coin = "I-MANA_INR"
     # coin = "I-SC_INR"
     # coin = "I-BAT_INR"
     # coin = "B-ZIL_BTC"
     balance = 100000.0
     bot = CryptoBot(coin=coin, timeInterval=timeSpan,
-                    balance=balance, loss_margin=1, profit_margin=4)
+                    balance=balance, loss_margin=0.5, profit_margin=1)
     # print(bot.load_crypto_data())
     bot.driver()

@@ -1,8 +1,27 @@
 {
     "I-BTC_INR": {
-        "trades": [],
-        "balance": 100000.0,
-        "coins": 0.0
+        "trades": [
+            {
+                "time-stamp": "2021-11-19 01:25:30.704305",
+                "price_inr": 4739836.0,
+                "trade": "BUY",
+                "amount": 0.021097776378760785
+            },
+            {
+                "time-stamp": "2021-11-19 01:26:25.284755",
+                "price_inr": 4826228.76,
+                "trade": "SELL",
+                "amount": 0.021097776378760785
+            },
+            {
+                "time-stamp": "2021-11-19 01:26:35.319246",
+                "price_inr": 4826228.76,
+                "trade": "BUY",
+                "amount": 0.021097776378760785
+            }
+        ],
+        "balance": 0.0,
+        "coins": 0.021097776378760785
     },
     "I-MATIC_INR": {
         "trades": [

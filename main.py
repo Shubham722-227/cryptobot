@@ -9,10 +9,10 @@ import os
 
 
 class CryptoBot:
-    def __init__(self, coin, time_interval, balance, loss_margin, profit_margin):
+    def __init__(self, coin, timeInterval, balance, loss_margin, profit_margin):
         self.coin = coin
         self.balance = balance
-        self.time = time_interval
+        self.timeInterval = timeInterval
         self.loss_margin = loss_margin
         self.profit_margin = profit_margin
         self.load_crypto_data()
@@ -81,7 +81,7 @@ class CryptoBot:
 
     def get_coin_data(self):
         data = requests.get(
-            f"https://public.coindcx.com/market_data/candles?pair={self.coin}&interval=1m&limit={self.time*2}").json()
+            f"https://public.coindcx.com/market_data/candles?pair={self.coin}&interval=1m&limit={self.timeInterval*2}").json()
         data = pd.DataFrame(data, columns=["close"])
         data = np.array(data)
         data = data.flatten()
@@ -89,10 +89,10 @@ class CryptoBot:
 
     def get_coin_mean(self, data):
         avg = np.array([])
-        for id in range(self.time):
-            arr = data[id:id+self.time]
+        for id in range(self.timeInterval):
+            arr = data[id:id+self.timeInterval]
             avg = np.append(avg, np.mean(arr), axis=None)
-        data = data[time-1:-1]
+        data = data[self.timeInterval - 1: -1]
         return avg
 
     def get_mean_slope(self, data):
@@ -122,7 +122,7 @@ class CryptoBot:
         last_trade = coin_data.get("trades")[-1]
         last_price = last_trade.get("price_inr")
 
-        stop_loss = last_price - ((self.loss_margin/100)* last_price)
+        stop_loss = last_price - ((self.loss_margin/100) * last_price)
         profit_margin = last_price + ((self.profit_margin/100) * last_price)
         print("\nCurrent Trade: \nStop Loss: ", stop_loss, "\nProfit Margin: ",
               profit_margin)
@@ -204,14 +204,15 @@ class CryptoBot:
 
 if __name__ == "__main__":
     print("Starting...\n")
-    time = 60
+    timeSpan = 120
     # coin = "I-BTC_INR"
     # coin = "I-MATIC_INR"
-    # coin = "I-MANA_INR"
+    coin = "I-MANA_INR"
     # coin = "I-SC_INR"
-    coin = "I-BAT_INR"
+    # coin = "I-BAT_INR"
     # coin = "B-ZIL_BTC"
     balance = 100000.0
-    bot = CryptoBot(coin, time, balance, 1, 4)
+    bot = CryptoBot(coin=coin, timeInterval=timeSpan,
+                    balance=balance, loss_margin=1, profit_margin=4)
     # print(bot.load_crypto_data())
     bot.driver()

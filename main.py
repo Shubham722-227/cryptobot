@@ -114,7 +114,6 @@ class CryptoBot:
         for id in range(3):
             if coin_mean_slope[len(coin_mean_slope)-id - 1] > 0:
                 check += 1
-        print(currSlope)
         if check == 3 and coin_data.get("balance") > 0.0 and not self.last_transaction == "BUY" and all(slope >= 0 for slope in currSlope):
             return "BUY"
         return "IDLE"
@@ -218,6 +217,6 @@ if __name__ == "__main__":
     # coin = "B-ZIL_BTC"
     balance = 100000.0
     bot = CryptoBot(coin=coin, timeInterval=timeSpan,
-                    balance=balance, loss_margin=0.5, profit_margin=3)
+                    balance=balance, loss_margin=0.5, profit_margin=1)
     # print(bot.load_crypto_data())
     bot.driver()

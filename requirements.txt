@@ -3,3 +3,5 @@ numpy
 pandas
 plyer
 requests
+streamlit
+plotly

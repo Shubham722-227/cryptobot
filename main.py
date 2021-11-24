@@ -75,7 +75,8 @@ class CryptoBot:
             "time-stamp": str(dt.now()),
             "price_inr": price,
             "trade": trade,
-            "amount": amount
+            "amount": amount,
+            "value": price*amount
         }
         return transaction
 
@@ -104,13 +105,17 @@ class CryptoBot:
             slope.append(m)
         return np.flipud(np.array(slope))
 
-    def check_buy(self, coin_mean_slope):
+    def check_buy(self, coin_mean_slope, coinData):
         coin_data = self.load_crypto_data()
         check = 0
+        currSlope = []
+        currSlope.append((coinData[-1] - coinData[-5])/5)
+        currSlope.append((coinData[-5] - coinData[-10])/5)
         for id in range(3):
             if coin_mean_slope[len(coin_mean_slope)-id - 1] > 0:
                 check += 1
-        if check == 3 and coin_data.get("balance") > 0.0 and not self.last_transaction == "BUY":
+        print(currSlope)
+        if check == 3 and coin_data.get("balance") > 0.0 and not self.last_transaction == "BUY" and all(slope >= 0 for slope in currSlope):
             return "BUY"
         return "IDLE"
 
@@ -190,7 +195,7 @@ class CryptoBot:
             coin_data = self.get_coin_data()
             coin_avg = self.get_coin_mean(coin_data)
             coin_avg_slope = self.get_mean_slope(coin_avg)
-            if self.last_transaction == "SELL" and self.check_buy(coin_avg_slope) == "BUY":
+            if self.last_transaction == "SELL" and self.check_buy(coin_avg_slope, coin_data) == "BUY":
                 self.make_buy(coin_data[-1])
 
             if self.last_transaction == "BUY" and self.check_sell(coin_data[-1]) == "SELL":
@@ -204,15 +209,15 @@ class CryptoBot:
 
 if __name__ == "__main__":
     print("Starting...\n")
-    timeSpan = 30
-    coin = "I-BTC_INR"
-    # coin = "I-MATIC_INR"
+    timeSpan = 60
+    # coin = "I-BTC_INR"
+    coin = "I-MATIC_INR"
     # coin = "I-MANA_INR"
     # coin = "I-SC_INR"
     # coin = "I-BAT_INR"
     # coin = "B-ZIL_BTC"
     balance = 100000.0
     bot = CryptoBot(coin=coin, timeInterval=timeSpan,
-                    balance=balance, loss_margin=0.5, profit_margin=1)
+                    balance=balance, loss_margin=0.5, profit_margin=3)
     # print(bot.load_crypto_data())
     bot.driver()
